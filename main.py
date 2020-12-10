@@ -33,14 +33,25 @@ def convert_to_cm(height):
     return cm
 
 # user input
-# gender_text = input('Are you "male" or "female": ')
-# weight_text = input('What is your weight? (Ex. "100 kg" or "180 lbs"): ')
+gender_text = input('Are you "male" or "female": ')
+weight_text = input('What is your weight? (Ex. "100 kg" or "180 lbs"): ')
 height_text = input("What is your height? (Ex. 1.5 m, 150 cm): ")
-# age_text = int(input("How old are you? "))
+age_text = int(input("How old are you? "))
+exercise_text = input("Tell me which exercises you did: ")
 
 headers = {
     "x-app-id": APP_ID,
     "x-app-key": API_KEY,    
 }
 
+parameters = {
+    "query": exercise_text,
+    "gender": gender_text,
+    "weight_kg": convert_to_kg(weight_text),
+    "height_cm": convert_to_cm(height_text),
+    "age": age_text
+}
 
+response = requests.post(url=exercise_endpoint, json=parameters, headers=headers)
+result = response.json()
+print(result)
