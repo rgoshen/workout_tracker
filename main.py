@@ -4,12 +4,14 @@ from datetime import datetime
 
 API_KEY = os.environ.get("NUTX_API_KEY")
 APP_ID = os.environ.get("NUTX_APP_ID")
+SHEETY_TOKEN = os.environ.get("SHEETY_TOKEN")
 
 exercise_endpoint = "https://trackapi.nutritionix.com/v2/natural/exercise"
 sheet_endpoint = "https://api.sheety.co/66b68d8e72da89ec872ba57ded11c330/workoutTracking/workouts"
 
 today_date = datetime.now().strftime("%m/%d/%Y")
-today_time = datetime.now().strftime("%H:%M:%S")
+today_time = datetime.now().strftime("%X")
+
 
 def convert_to_kg(weight):
     """Takes in a weight string and returns a weight in kg."""
@@ -38,6 +40,7 @@ def convert_to_cm(height):
         
     return cm
 
+
 # user input
 gender_text = input('Are you "male" or "female": ')
 weight_text = input('What is your weight? (Ex. "100 kg" or "180 lbs"): ')
@@ -58,6 +61,10 @@ parameters = {
     "age": age_text
 }
 
+bearer_headers = {
+    "Authorization": f"Bearer {SHEETY_TOKEN}"
+}
+
 response = requests.post(url=exercise_endpoint, json=parameters, headers=headers)
 result = response.json()
 
@@ -72,4 +79,5 @@ for exercise in result["exercises"]:
         }
     }
 
-    sheet_response = requests.post(url=sheet_endpoint, json=sheet_inputs)
+    sheet_response = requests.post(url=sheet_endpoint, json=sheet_inputs, headers=bearer_headers)
+    print(sheet_response)
